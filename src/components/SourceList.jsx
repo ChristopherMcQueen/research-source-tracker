@@ -10,7 +10,24 @@ function statusClass(status) {
   return status.toLowerCase().replaceAll(' ', '-')
 }
 
-function SourceList({ sources, hasAnySources, onAdd, onEdit, onDelete }) {
+function SourceList({
+  sources,
+  hasAnySources,
+  loading,
+  deletingId,
+  onAdd,
+  onEdit,
+  onDelete,
+}) {
+  if (loading) {
+    return (
+      <div className="loading-state" role="status">
+        <span className="loading-spinner" aria-hidden="true" />
+        Loading saved sources…
+      </div>
+    )
+  }
+
   if (!sources.length) {
     return (
       <div className="empty-state">
@@ -72,15 +89,21 @@ function SourceList({ sources, hasAnySources, onAdd, onEdit, onDelete }) {
               </td>
               <td data-label="Updated">{formatDate(source.updated_at)}</td>
               <td className="row-actions">
-                <button className="button button-link" type="button" onClick={() => onEdit(source)}>
+                <button
+                  className="button button-link"
+                  type="button"
+                  onClick={() => onEdit(source)}
+                  disabled={deletingId === source.id}
+                >
                   Edit
                 </button>
                 <button
                   className="button button-link button-danger"
                   type="button"
                   onClick={() => onDelete(source)}
+                  disabled={deletingId === source.id}
                 >
-                  Delete
+                  {deletingId === source.id ? 'Deleting…' : 'Delete'}
                 </button>
               </td>
             </tr>

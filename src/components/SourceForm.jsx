@@ -9,7 +9,7 @@ const blankSource = {
   notes: '',
 }
 
-function SourceForm({ source, onClose, onSave }) {
+function SourceForm({ source, saving, onClose, onSave }) {
   const [values, setValues] = useState(source ?? blankSource)
   const [error, setError] = useState('')
 
@@ -32,7 +32,7 @@ function SourceForm({ source, onClose, onSave }) {
     setValues((current) => ({ ...current, [name]: value }))
   }
 
-  function handleSubmit(event) {
+  async function handleSubmit(event) {
     event.preventDefault()
 
     if (!values.title.trim() || !values.url.trim()) {
@@ -48,7 +48,7 @@ function SourceForm({ source, onClose, onSave }) {
     }
 
     setError('')
-    onSave({
+    await onSave({
       title: values.title.trim(),
       url: values.url.trim(),
       source_type: values.source_type,
@@ -59,7 +59,13 @@ function SourceForm({ source, onClose, onSave }) {
   }
 
   return (
-    <div className="modal-backdrop" role="presentation" onMouseDown={onClose}>
+    <div
+      className="modal-backdrop"
+      role="presentation"
+      onMouseDown={() => {
+        if (!saving) onClose()
+      }}
+    >
       <section
         className="modal-card"
         role="dialog"
@@ -72,7 +78,13 @@ function SourceForm({ source, onClose, onSave }) {
             <p className="eyebrow">Source details</p>
             <h2 id="source-form-title">{source ? 'Edit source' : 'Add a new source'}</h2>
           </div>
-          <button className="icon-button" type="button" onClick={onClose} aria-label="Close form">
+          <button
+            className="icon-button"
+            type="button"
+            onClick={onClose}
+            aria-label="Close form"
+            disabled={saving}
+          >
             ×
           </button>
         </div>
@@ -166,11 +178,16 @@ function SourceForm({ source, onClose, onSave }) {
           {error && <p className="form-error">{error}</p>}
 
           <div className="form-actions">
-            <button className="button button-secondary" type="button" onClick={onClose}>
+            <button
+              className="button button-secondary"
+              type="button"
+              onClick={onClose}
+              disabled={saving}
+            >
               Cancel
             </button>
-            <button className="button button-primary" type="submit">
-              {source ? 'Save changes' : 'Add source'}
+            <button className="button button-primary" type="submit" disabled={saving}>
+              {saving ? 'Saving…' : source ? 'Save changes' : 'Add source'}
             </button>
           </div>
         </form>
