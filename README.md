@@ -5,7 +5,7 @@ Research Source Tracker is a full-stack web application for organizing sources c
 ## Links
 
 - Deployed application: [https://mcqueen-research-source-tracker.netlify.app](https://mcqueen-research-source-tracker.netlify.app)
-- Demo video: Added after recording
+- Demo video: [https://youtu.be/6TiJYQoibkE](https://youtu.be/6TiJYQoibkE)
 
 ## What the application does
 
